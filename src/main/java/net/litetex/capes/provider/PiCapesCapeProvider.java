@@ -27,7 +27,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 
 
-
 public class PiCapesCapeProvider implements CapeProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(PiCapesCapeProvider.class);
 	static {
@@ -36,36 +35,46 @@ public class PiCapesCapeProvider implements CapeProvider {
 
 	public static final String ID = "picapesmod";
 	private static String serverHost = "";
+	private static String modNameDefault = "Pi Capes";
+	private static String modName = "Pi Capes";
 	private static boolean initialized = false;
 
-		// (PiCapes) Called on mod initialization
-		public static void initializeServerHost() {
-			if (initialized) return;
-			initialized = true;
-			try {
-				HttpClient client = HttpClient.newHttpClient();
-				HttpRequest request = HttpRequest.newBuilder()
-					.uri(java.net.URI.create("https://picapes.github.io/api/server.json"))
-					.GET()
-					.build();
-				HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-				if (response.statusCode() / 100 == 2) {
-					var json = new Gson().fromJson(response.body(), Map.class);
-					Object ip = json.get("serverHost");
-					if (ip != null) {
-						serverHost = ip.toString();
-						LOG.info("[PiCapes] Server host found: {}", serverHost);
-					} else {
-						LOG.warn("[PiCapes] Server host not found in response JSON.");
-					}
+	// (PiCapes) Called on mod initialization
+	public static void initializeServerHost() {
+		if (initialized) return;
+		initialized = true;
+		try {
+			HttpClient client = HttpClient.newHttpClient();
+			HttpRequest request = HttpRequest.newBuilder()
+				.uri(java.net.URI.create("https://picapes.github.io/api/server.json"))
+				.GET()
+				.build();
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() / 100 == 2) {
+				var json = new Gson().fromJson(response.body(), Map.class);
+				Object ip = json.get("serverHost");
+				if (ip != null) {
+					serverHost = ip.toString();
+					LOG.info("[PiCapes] Server host found: {}", serverHost);
 				} else {
-					LOG.warn("[PiCapes] Server host API returned status code: {}", response.statusCode());
+					LOG.warn("[PiCapes] Server host not found in response JSON.");
 				}
-			} catch (Exception e) {
-				LOG.error("[PiCapes] Failed to fetch server host from API.", e);
-				serverHost = null;
+				Object nameObj = json.get("name");
+				if (nameObj != null && !nameObj.toString().isEmpty()) {
+					modName = nameObj.toString();
+					LOG.info("[PiCapes] Mod name set from API: {}", modName);
+				} else {
+					LOG.warn("[PiCapes] Mod name not found in response JSON, using fallback.");
+				}
+			} else {
+				LOG.warn("[PiCapes] Server host API returned status code: {}", response.statusCode());
 			}
+		} catch (Exception e) {
+			LOG.error("[PiCapes] Failed to fetch server host from API.", e);
+			serverHost = null;
+			modName = modNameDefault;
 		}
+	}
 	@Override
 	public String id() {
 		return ID;
@@ -73,7 +82,7 @@ public class PiCapesCapeProvider implements CapeProvider {
 
 	@Override
 	public String name() {
-		return "Pi Capes";
+		return modName != null && !modName.isEmpty() ? modName : modNameDefault;
 	}
 
 	@Override
