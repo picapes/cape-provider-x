@@ -1,4 +1,17 @@
+
 package net.litetex.capes.provider;
+import java.io.IOException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Map;
+import com.google.gson.Gson;
+import com.mojang.authlib.GameProfile;
+import net.litetex.capes.handler.textures.AnimatedSpriteTextureResolver;
+import net.minecraft.SharedConstants;
+import net.minecraft.client.MinecraftClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -16,36 +29,43 @@ import net.minecraft.client.MinecraftClient;
 
 
 public class PiCapesCapeProvider implements CapeProvider {
+	private static final Logger LOG = LoggerFactory.getLogger(PiCapesCapeProvider.class);
 	static {
-		initializeServerIP();
+		initializeServerHost();
 	}
 
 	public static final String ID = "picapesmod";
-	private static String serverIP = "";
+	private static String serverHost = "";
 	private static boolean initialized = false;
 
-	// (PiCapes) Called on mod initialization
-	public static void initializeServerIP() {
-		if (initialized) return;
-		initialized = true;
-		try {
-			HttpClient client = HttpClient.newHttpClient();
-			HttpRequest request = HttpRequest.newBuilder()
-				.uri(java.net.URI.create("https://picapes.github.io/api/server.json"))
-				.GET()
-				.build();
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			if (response.statusCode() / 100 == 2) {
-				var json = new Gson().fromJson(response.body(), Map.class);
-				Object ip = json.get("serverIP");
-				if (ip != null) serverIP = ip.toString();
+		// (PiCapes) Called on mod initialization
+		public static void initializeServerHost() {
+			if (initialized) return;
+			initialized = true;
+			try {
+				HttpClient client = HttpClient.newHttpClient();
+				HttpRequest request = HttpRequest.newBuilder()
+					.uri(java.net.URI.create("https://picapes.github.io/api/server.json"))
+					.GET()
+					.build();
+				HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+				if (response.statusCode() / 100 == 2) {
+					var json = new Gson().fromJson(response.body(), Map.class);
+					Object ip = json.get("serverHost");
+					if (ip != null) {
+						serverHost = ip.toString();
+						LOG.info("[PiCapes] Server host found: {}", serverHost);
+					} else {
+						LOG.warn("[PiCapes] Server host not found in response JSON.");
+					}
+				} else {
+					LOG.warn("[PiCapes] Server host API returned status code: {}", response.statusCode());
+				}
+			} catch (Exception e) {
+				LOG.error("[PiCapes] Failed to fetch server host from API.", e);
+				serverHost = null;
 			}
-		} catch (Exception e) {
-			// fallback or log error
-			serverIP = ""; //put smthing here
 		}
-	}
-
 	@Override
 	public String id() {
 		return ID;
@@ -53,15 +73,19 @@ public class PiCapesCapeProvider implements CapeProvider {
 
 	@Override
 	public String name() {
-		return "PiCapes BETA";
+		return "Pi Capes";
 	}
 
 	@Override
 	public String getBaseUrl(final GameProfile profile) {
-		if (serverIP == null || serverIP.isEmpty()) {
-			return ""; //put smthing here
+		if (serverHost == null || serverHost.isEmpty()) {
+			// Try to initialize again if not set
+			initializeServerHost();
+			if (serverHost == null || serverHost.isEmpty()) {
+				return null;
+			}
 		}
-		return "http://" + serverIP + "/profile/" + profile.getName();
+		return serverHost + "/profile/" + profile.getName(); // <serverHost> contains the protocol (http/https) (e.g. http://picapes.example.com) 
 	}
 
 	@Override
