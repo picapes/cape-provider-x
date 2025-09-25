@@ -59,7 +59,8 @@
     "capemod": "*",
     "cicada": "*",
     "voidcapes": "*",
-    "bettercapes": "*"
+    "bettercapes": "*",
+    "cape-provider": "*"
   },
   "custom": {
     "modmenu": {

@@ -136,7 +136,7 @@ public class PiCapesCapeProvider implements CapeProvider {
 
 	@Override
 	public String changeCapeUrl(final MinecraftClient client) {
-		return this.homepageUrl();
+		return "https://picapes.github.io/changeCape";
 	}
 
 	@Override

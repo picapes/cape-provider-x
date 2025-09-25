@@ -27,7 +27,7 @@ public class SkinMCProvider implements CapeProvider
 	@Override
 	public String name()
 	{
-		return "SkinMC";
+		return "SkinMC Cape";
 	}
 	
 	@Override
