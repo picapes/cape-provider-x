@@ -4,6 +4,11 @@
   * Made it possible to use `§` instead of `$`
     * Updated the demo accordingly
 
+## 4.0.2-m1 > 1st Patch of Modifications (@xsyanic's Changes)
+* Added support for PiCapes  
+* Added support for SkinMC 
+* Config is now `config/cape-provider-x.json5` instead of `config/cape-provider.json5` to avoid config conflicts.
+
 # 4.0.1
 * Made animated GIF decoding more reliable
   * This should fix broken textures #135
