@@ -44,8 +44,10 @@ public class Config
 		this.setAnimatedCapesHandling(AnimatedCapesHandling.ON);
 		this.setModProviderHandling(ModProviderHandling.ON);
 		this.setKnownModProviderIdsFirstTimeMissing(null);
-		
-		this.setValidateProfile(null);
+
+		// Offline Multiplayer support, false = allows cape to show on cracked players (otherwise capes would only be loaded for premium accounts)
+		this.setValidateProfile(false); 
+
 		this.setLoadThrottleSuppressSec(null);
 		this.setBlockedProviderCapeHashes(null);
 		this.setLoadThreads(null);
