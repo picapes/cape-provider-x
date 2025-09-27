@@ -39,7 +39,9 @@ public class PiCapesCapeProvider implements CapeProvider {
 	private static String modName = "Pi Capes";
 	private static boolean initialized = false;
 
-	// (PiCapes) Called on mod initialization
+	
+
+	// (PiCapes) API Server Fetching
 	public static void initializeServerHost() {
 		if (initialized) return;
 		initialized = true;

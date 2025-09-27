@@ -23,8 +23,8 @@
   ],
   "contact": {
     "homepage": "https://picapes.github.io/mod",
-    "sources": "https://github.com/picapes/mcm-offline-cape-provider",
-    "issues": "https://github.com/picapes/mcm-offline-cape-provider/issues"
+    "sources": "https://github.com/picapes/cape-provider-x",
+    "issues": "https://github.com/picapes/cape-provider-x/issues"
   },
   "license": "${license_spdx_id}",
   "icon": "assets/icon.png",
@@ -65,7 +65,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.github_releases": "https://github.com/picapes/mcm-offline-cape-provider",
+        "modmenu.github_releases": "https://github.com/picapes/cape-provider-x",
         "modmenu.modrinth": "https://modrinth.com/mod/${id}"
       }
     }

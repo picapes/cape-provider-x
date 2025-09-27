@@ -59,7 +59,7 @@ public class FabricCapes implements ClientModInitializer
 	
 	private Path configFilePath()
 	{
-		return FabricLoader.getInstance().getConfigDir().resolve("offline-cape-provider.json5"); // old cape-provider.json5
+		return FabricLoader.getInstance().getConfigDir().resolve("cape-provider-x.json5"); // old cape-provider.json5
 	}
 	
 	private Config loadConfig()

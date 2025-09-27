@@ -34,7 +34,7 @@ public interface ResolvedTextureInfo {
 		}
 	}
 
-	// (PiCapes) New record for direct URL textures
+	// New record for direct URL textures (PiCapes)
 	record UrlTextureInfo(String textureURL, String textureResolverId) implements ResolvedTextureInfo {
 		public UrlTextureInfo(final String textureURL) {
 			this(textureURL, null);
