@@ -28,7 +28,7 @@ public class RealPlayerValidator
 	
 	public boolean isReal(final GameProfile profile)
 	{
-		return this.cache.computeIfAbsent(profile.getId(), ignored -> this.checkReal(profile));
+		return this.cache.computeIfAbsent(profile.id(), ignored -> this.checkReal(profile));
 	}
 	
 	private boolean checkReal(final GameProfile profile)
@@ -37,8 +37,8 @@ public class RealPlayerValidator
 		
 		LOG.debug(
 			"Determined that {}/{} is {}a real player: {}",
-			profile.getName(),
-			profile.getId(),
+			profile.name(),
+			profile.id(),
 			validityState.isValid() ? "" : "NOT ",
 			validityState.name());
 		
@@ -48,7 +48,7 @@ public class RealPlayerValidator
 	private ValidityState determineIfInvalid(final MinecraftClient client, final GameProfile profile)
 	{
 		// The current player is always valid
-		if(profile.getId().equals(client.getSession().getUuidOrNull()))
+		if(profile.id().equals(client.getSession().getUuidOrNull()))
 		{
 			return ValidityState.SELF;
 		}
@@ -125,7 +125,7 @@ public class RealPlayerValidator
 		{
 			// Check if this is a real player (not a fake one create by a server)
 			// Use secure = false to utilize cache
-			return client.getSessionService().fetchProfile(id, false) != null;
+			return client.getApiServices().sessionService().fetchProfile(id, false) != null;
 		}
 		catch(final Exception ex)
 		{
