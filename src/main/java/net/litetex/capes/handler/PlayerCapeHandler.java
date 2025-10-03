@@ -116,11 +116,11 @@ public class PlayerCapeHandler
 					if (imageResponse.statusCode() / 100 == 2) {
 						imageBytes = imageResponse.body();
 					} else {
-						LOG.warn("Failed to fetch cape image[url='{}',profileId='{}',statusCode='{}']", urlInfo.textureURL(), this.profile.getId(), imageResponse.statusCode());
+						LOG.warn("Failed to fetch cape image[url='{}',profileId='{}',statusCode='{}']", urlInfo.textureURL(), this.profile.id(), imageResponse.statusCode());
 						return false;
 					}
 				} catch (Exception e) {
-					LOG.warn("Failed to fetch cape image[url='{}',profileId='{}']", urlInfo.textureURL(), this.profile.getId(), e);
+					LOG.warn("Failed to fetch cape image[url='{}',profileId='{}']", urlInfo.textureURL(), this.profile.id(), e);
 					return false;
 				}
 			}
@@ -144,23 +144,23 @@ public class PlayerCapeHandler
 				return false;
 			}
 
-			this.optIdentifierProvider = this.registerTexturesAndGetProvider(
+			this.optTextureProvider = this.registerTexturesAndGetProvider(
 				this.determineTexturesToRegister(
 					textureResolver,
 					imageBytes,
 					animatedCapesHandling == AnimatedCapesHandling.FROZEN,
 					textureUrlForLog));
 
-			return this.optIdentifierProvider.isPresent();
+			return this.optTextureProvider.isPresent();
 		}
 		catch(final InterruptedException iex)
 		{
-			LOG.warn("Got interrupted[url='{}',profileId='{}']", profileApiUrl, this.profile.getId(), iex);
+			LOG.warn("Got interrupted[url='{}',profileId='{}']", profileApiUrl, this.profile.id(), iex);
 			Thread.currentThread().interrupt();
 		}
 		catch(final Exception ex)
 		{
-			LOG.warn("Failed to process texture[url='{}',profileId='{}']", profileApiUrl, this.profile.getId(), ex);
+			LOG.warn("Failed to process texture[url='{}',profileId='{}']", profileApiUrl, this.profile.id(), ex);
 		}
 
 		this.resetCape();

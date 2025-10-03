@@ -9,14 +9,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mojang.authlib.GameProfile;
+
+import net.litetex.capes.provider.antifeature.AntiFeature;
+import net.litetex.capes.provider.antifeature.AntiFeatures;
 import net.minecraft.client.MinecraftClient;
 
 
-public class SkinMCProvider implements CapeProvider
+public class RumbleCapeProvider implements CapeProvider
 {
-	private static final Logger LOG = LoggerFactory.getLogger(SkinMCProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RumbleCapeProvider.class);
 	
-	public static final String ID = "skinmc";
+	public static final String ID = "rumblecapes";
 	
 	@Override
 	public String id()
@@ -27,13 +30,13 @@ public class SkinMCProvider implements CapeProvider
 	@Override
 	public String name()
 	{
-		return "SkinMC Cape";
+		return "Rumble Capes";
 	}
 	
 	@Override
 	public String getBaseUrl(final GameProfile profile)
 	{
-		return "https://skinmc.net/api/v1/skinmcCape/" + profile.id().toString(); // https://skinmc.net/api/v1/skinmcCape/<uuid>
+		return "http://rumblecapes.xyz/capes/" + profile.name() + ".png";
 	}
 	
 	@Override
@@ -45,12 +48,12 @@ public class SkinMCProvider implements CapeProvider
 	@Override
 	public String changeCapeUrl(final MinecraftClient client)
 	{
-		return "https://skinmc.net/account/capes";
+	return "http://rumblecapes.xyz/";
 	}
 	
 	@Override
 	public String homepageUrl()
 	{
-		return "https://skinmc.net/capes";
+		return "http://rumblecapes.xyz/";
 	}
 }

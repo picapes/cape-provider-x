@@ -94,7 +94,7 @@ public class PiCapesCapeProvider implements CapeProvider {
 				return null;
 			}
 		}
-		return serverHost + "/profile/" + profile.getName(); // <serverHost> contains the protocol (http/https) (e.g. http://picapes.example.com) 
+		return serverHost + "/profile/" + profile.name(); // <serverHost> contains the protocol (http/https) (e.g. http://picapes.example.com) 
 	}
 
 	@Override

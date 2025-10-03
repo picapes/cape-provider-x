@@ -59,15 +59,15 @@ public class RealPlayerValidator
 		// Some servers report players with different versions,
 		// however these are ignored as the cape provider can't match them
 
-		//if(profile.getId().version() != 4)
+		//if(profile.id().version() != 4)
 		//{
 		//	return ValidityState.UUID_INCORRECT_VERSION;
 		//}
-		//if(!this.isValidName(profile.getName()))
+		//if(!this.isValidName(profile.name()))
 		//{
 		//	return ValidityState.INVALID_NAME;
 		//}
-		//if(this.useOnlineValidation && !this.isValidSessionProfile(client, profile.getId()))
+		//if(this.useOnlineValidation && !this.isValidSessionProfile(client, profile.id()))
 		//{
 		//	return ValidityState.ONLINE_VALIDATION_FAIL;
 		//}

@@ -1,6 +1,9 @@
 # 4.1.0
 * Updated to 1.21.9
 
+## 4.1.0-p2 > 2nd Patch of Modifications (@xsyanic's Changes)
+* Added support for Rumble Capes
+
 # 4.0.2
 * Fixed: `$` inside `fabric.mod.json` is usually replaced by the build process #145
   * Added a note that this may require escaping using a `\`

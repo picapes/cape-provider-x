@@ -1,6 +1,7 @@
 net.litetex.capes.provider.PiCapesCapeProvider
 net.litetex.capes.provider.MinecraftCapesCapeProvider
 net.litetex.capes.provider.SkinMCProvider
+net.litetex.capes.provider.RumbleCapeProvider
 net.litetex.capes.provider.OptiFineCapeProvider
 net.litetex.capes.provider.WynntilsProvider
 net.litetex.capes.provider.CosmeticaProvider
