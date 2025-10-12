@@ -36,7 +36,7 @@ public class RumbleCapeProvider implements CapeProvider
 	@Override
 	public String getBaseUrl(final GameProfile profile)
 	{
-		return "http://rumblecapes.xyz/capes/" + profile.name() + ".png";
+		return "http://api.rumblecapes.xyz/capes/" + profile.name() + ".png";
 	}
 	
 	@Override
