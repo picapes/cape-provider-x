@@ -1,5 +1,10 @@
 # 4.1.0
-* Updated to 1.21.9
+* Updated to 1.21.9 (Also supports 1.21.10)
+
+## 4.1.0-p3 > 3rd Patch of Modifications (@xsyanic's Changes)
+* Updated Rumble Capes API (thanks to [@deko-ui](https://github.com/picapes/cape-provider-x/pull/4))
+* Updated Cosmetica Provider API (thanks to [@deko-ui](https://github.com/litetex-oss/mcm-cape-provider/pull/167)) + Animated Support
+* PiCapes Domain Update
 
 ## 4.1.0-p2 > 2nd Patch of Modifications (@xsyanic's Changes)
 * Added support for Rumble Capes

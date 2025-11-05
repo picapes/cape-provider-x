@@ -35,11 +35,12 @@ public class PiCapesCapeProvider implements CapeProvider {
 
 	public static final String ID = "picapesmod";
 	private static String serverHost = "";
-	private static String modNameDefault = "Pi Capes";
-	private static String modName = "Pi Capes";
+	private static String modNameDefault = "PiCapes";
+	private static String modName = "PiCapes";
 	private static boolean initialized = false;
 
 	// (PiCapes) API Server Fetching
+	// API Server Fetching kept
 	public static void initializeServerHost() {
 		if (initialized) return;
 		initialized = true;
@@ -94,7 +95,7 @@ public class PiCapesCapeProvider implements CapeProvider {
 				return null;
 			}
 		}
-		return serverHost + "/profile/" + profile.name(); // <serverHost> contains the protocol (http/https) (e.g. http://picapes.example.com) 
+		return serverHost + "/profile/" + profile.name(); // serverHost contains the protocol (http/https) (e.g. http://server.picapes.syanic.org) 
 	}
 
 	@Override
@@ -130,17 +131,23 @@ public class PiCapesCapeProvider implements CapeProvider {
 	}
 
 	@Override
+	public double rateLimitedReqPerSec()
+	{
+		return 10;
+	}
+
+	@Override
 	public boolean hasChangeCapeUrl() {
 		return true;
 	}
 
 	@Override
 	public String changeCapeUrl(final MinecraftClient client) {
-		return "https://picapes.github.io/changeCape";
+		return "https://picapes.syanic.org/changeCape";
 	}
 
 	@Override
 	public String homepageUrl() {
-		return "https://picapes.github.io/";
+		return "https://picapes.syanic.org/";
 	}
 }
