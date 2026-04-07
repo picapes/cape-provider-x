@@ -1,3 +1,17 @@
+# 5.0.0
+* Added possibility to add a simple/static local provider
+  * Require no network connection
+  * Can be utilized by mods (via metadata/resources) or by locally in the new configuration directory
+* New configuration directory: `config/cape-provider`
+  * Migrated configuration file from `config/cape-provider.json5` to `config/cape-provider/config.json`
+  * Some configuration options changed and might be reset to the defaults
+* Updated documentation
+* Removed OptiFine from default providers
+* Removed unused translations
+
+## 5.0.0-p4 > 4th Patch of Modifications (@xsyanic's Changes)
+> Based on `1.21.1-legacy` branch directly, backport for 1.21.1
+
 # 4.3.1
 * Fix GSON Map serialization problem
 
@@ -7,7 +21,7 @@
 * Updated providers & resolved some issues
 
 # 4.3.0
-* Implement local caching of cape textures - if the provider supports it #
+* Implement local caching of cape textures - if the provider supports it #205
   * Currently only supported by MinecraftCapes
   * Textures are saved inside `.mods/cape-provider/texture-cache` in the game directory
   * Unused textures are cleaned up automatically

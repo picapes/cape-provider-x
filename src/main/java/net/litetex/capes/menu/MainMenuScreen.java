@@ -7,12 +7,10 @@ import java.util.stream.Stream;
 
 import net.litetex.capes.Capes;
 import net.litetex.capes.config.Config;
-import net.litetex.capes.i18n.CapesI18NKeys;
 import net.litetex.capes.menu.other.OtherMenuScreen;
 import net.litetex.capes.menu.preview.PreviewMenuScreen;
 import net.litetex.capes.menu.provider.ProviderMenuScreen;
 import net.litetex.capes.util.CorrectHoverParentElement;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.OptionsList;
@@ -32,7 +30,7 @@ public abstract class MainMenuScreen extends OptionsSubScreen implements Correct
 		final Screen parent,
 		final Options gameOptions)
 	{
-		super(parent, gameOptions, Component.translatable(CapesI18NKeys.CAPE_OPTIONS));
+		super(parent, gameOptions, Component.literal("Cape Options"));
 	}
 	
 	@SuppressWarnings("checkstyle:MagicNumber")
@@ -40,8 +38,8 @@ public abstract class MainMenuScreen extends OptionsSubScreen implements Correct
 	protected void addContents()
 	{
 		// The first "row" is used by the buttons for the individual screens
-		this.list = this.layout.addToContents(
-			new HeaderHeightOptionListWidget(this.minecraft, this.width, this, 24));
+		this.list = this.layout.addToContents(new OptionsList(this.minecraft, this.width, this));
+		this.list.headerHeight = 28; // The first "row" is used by the buttons for the individual screens
 		this.addOptions();
 	}
 	
@@ -52,7 +50,7 @@ public abstract class MainMenuScreen extends OptionsSubScreen implements Correct
 		final int offset = (buttonW / 2) + 5;
 		
 		record ButtonBuildData(
-			String translationKey,
+			String text,
 			Supplier<Screen> screenSupplier,
 			int positionDiff,
 			Class<?> clazz
@@ -62,25 +60,25 @@ public abstract class MainMenuScreen extends OptionsSubScreen implements Correct
 		
 		Stream.of(
 				new ButtonBuildData(
-					CapesI18NKeys.PREVIEW,
+					"Preview",
 					() -> new PreviewMenuScreen(this.lastScreen, this.options),
 					-(buttonW / 2),
 					PreviewMenuScreen.class
 				),
 				new ButtonBuildData(
-					CapesI18NKeys.MANAGE_PROVIDERS,
+					"Manage Providers",
 					() -> new ProviderMenuScreen(this.lastScreen, this.options),
 					-(buttonW + offset),
 					ProviderMenuScreen.class),
 				new ButtonBuildData(
-					CapesI18NKeys.OTHER,
+					"Other",
 					() -> new OtherMenuScreen(this.lastScreen, this.options),
 					offset,
 					OtherMenuScreen.class
 				))
 			.forEach(data -> {
 				final Button buttonWidget = this.addSelfManagedDrawableChild(Button.builder(
-						Component.translatable(data.translationKey()),
+						Component.literal(data.text()),
 						b -> this.minecraft.setScreen(data.screenSupplier().get()))
 					.pos((this.width / 2) + data.positionDiff(), 35)
 					.size(buttonW, 20)
@@ -135,32 +133,5 @@ public abstract class MainMenuScreen extends OptionsSubScreen implements Correct
 	{
 		super.onClose();
 		this.capes().refreshIfMarked();
-	}
-	
-	static class HeaderHeightOptionListWidget extends OptionsList
-	{
-		private final int headerHeight;
-		
-		public HeaderHeightOptionListWidget(
-			final Minecraft client,
-			final int width,
-			final OptionsSubScreen optionsScreen,
-			final int headerHeight)
-		{
-			super(client, width, optionsScreen);
-			this.headerHeight = headerHeight;
-		}
-		
-		@Override
-		protected int getFirstEntryY()
-		{
-			return super.getFirstEntryY() + this.headerHeight;
-		}
-		
-		@Override
-		protected int contentHeight()
-		{
-			return super.contentHeight() + this.headerHeight;
-		}
 	}
 }

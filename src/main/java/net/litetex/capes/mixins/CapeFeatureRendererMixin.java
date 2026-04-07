@@ -12,9 +12,12 @@ import net.minecraft.resources.ResourceLocation;
 @Mixin(CapeLayer.class)
 public abstract class CapeFeatureRendererMixin
 {
-	@Redirect(method = "submit*", at = @At(value = "INVOKE",
-		target = "Lnet/minecraft/client/renderer/RenderType;entitySolid(Lnet/minecraft/resources/ResourceLocation;)"
-			+ "Lnet/minecraft/client/renderer/RenderType;"))
+	@Redirect(
+		method = "render*",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/RenderType;entitySolid(Lnet/minecraft/resources/ResourceLocation;"
+				+ ")Lnet/minecraft/client/renderer/RenderType;"))
 	private RenderType fixCapeTransparency(final ResourceLocation texture)
 	{
 		return RenderType.armorCutoutNoCull(texture);

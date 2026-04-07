@@ -36,7 +36,7 @@ public class CosmeticaProvider implements CapeProvider
 	public String getBaseUrl(final GameProfile profile)
 	{
 		return "https://api.cosmetica.cc/v2/get/info"
-			+ "?uuid=" + profile.id().toString()
+			+ "?uuid=" + profile.getId().toString()
 			+ "&nothirdparty"
 			+ "&excludemodels";
 	}

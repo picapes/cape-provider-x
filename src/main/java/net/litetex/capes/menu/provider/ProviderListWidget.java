@@ -1,6 +1,7 @@
 package net.litetex.capes.menu.provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -9,8 +10,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.lwjgl.glfw.GLFW;
-
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 
 import net.litetex.capes.Capes;
 import net.litetex.capes.menu.TickBoxWidget;
@@ -32,9 +31,6 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -95,13 +91,6 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		last.downVisible(false);
 	}
 	
-	@Override
-	public void setPosition(final int x, final int y)
-	{
-		super.setPosition(x, y);
-		this.repositionEntries();
-	}
-	
 	private ProviderListEntry createEntry(
 		final CapeProvider capeProvider,
 		final boolean active)
@@ -140,7 +129,7 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		final int otherIndex = selfIndex + (up ? -1 : 1);
 		final ProviderListEntry other = children.get(otherIndex);
 		
-		this.swap(selfIndex, otherIndex);
+		Collections.swap(children, selfIndex, otherIndex);
 		
 		final ProviderListEntry higherEntry = up ? entry : other;
 		final ProviderListEntry lowerEntry = up ? other : entry;
@@ -224,9 +213,7 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 			
 			this.nameTextSupplier = () ->
 				formatMutableTextIf(Component.literal(this.capeProvider.name()), hasHomePageUrl, ChatFormatting.BLUE);
-			final BiFunction<Component, Font, StringWidget> widgetFunc = hasHomePageUrl
-				? ClickableTextWidget::new
-				: StringWidget::new;
+			final BiFunction<Component, Font, StringWidget> widgetFunc = StringWidget::new;
 			this.txtName = widgetFunc.apply(
 				this.nameTextSupplier.get(),
 				Minecraft.getInstance().font);
@@ -330,17 +317,18 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		}
 		
 		@Override
-		public void renderContent(
+		public void render(
 			final GuiGraphics context,
+			final int index,
+			final int y,
+			final int x,
+			final int entryWidth,
+			final int entryHeight,
 			final int mouseX,
 			final int mouseY,
 			final boolean hovered,
 			final float tickDelta)
 		{
-			final int x = this.getContentX();
-			final int y = this.getContentY();
-			final int entryWidth = this.getContentWidth();
-			
 			this.chbxActive.setPosition(x, y + (ITEM_HEIGHT - this.chbxActive.getHeight() - 4) / 2);
 			this.chbxActive.render(context, mouseX, mouseY, tickDelta);
 			
@@ -388,13 +376,11 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		}
 		
 		@Override
-		public boolean mouseClicked(final MouseButtonEvent click, final boolean doubled)
+		public boolean mouseClicked(final double mouseX, final double mouseY, final int button)
 		{
-			final double mouseX = click.x();
-			final double mouseY = click.y();
 			if(this.chbxActive.isMouseOver(mouseX, mouseY))
 			{
-				return this.chbxActive.mouseClicked(click, doubled);
+				return this.chbxActive.mouseClicked(mouseX, mouseY, button);
 			}
 			if(this.onTxtClick != null && this.txtName.isMouseOver(mouseX, mouseY))
 			{
@@ -403,15 +389,15 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 			}
 			if(this.btnEditCape != null && this.btnEditCape.isMouseOver(mouseX, mouseY))
 			{
-				return this.btnEditCape.mouseClicked(click, doubled);
+				return this.btnEditCape.mouseClicked(mouseX, mouseY, button);
 			}
 			if(this.icoMoveUp.isMouseOver(mouseX, mouseY))
 			{
-				return this.icoMoveUp.mouseClicked(click, doubled);
+				return this.icoMoveUp.mouseClicked(mouseX, mouseY, button);
 			}
 			else if(this.icoMoveDown.isMouseOver(mouseX, mouseY))
 			{
-				return this.icoMoveDown.mouseClicked(click, doubled);
+				return this.icoMoveDown.mouseClicked(mouseX, mouseY, button);
 			}
 			return true; // Select
 		}
@@ -425,15 +411,14 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		}
 		
 		@Override
-		public boolean keyPressed(final KeyEvent input)
+		public boolean keyPressed(final int keyCode, final int scanCode, final int modifiers)
 		{
-			final int keyCode = input.input();
 			if(GLFW.GLFW_KEY_SPACE == keyCode || GLFW.GLFW_KEY_ENTER == keyCode)
 			{
 				this.chbxActive.toggle();
 				return true;
 			}
-			if(GLFW.GLFW_MOD_SHIFT == input.modifiers())
+			if(GLFW.GLFW_MOD_SHIFT == modifiers)
 			{
 				if(GLFW.GLFW_KEY_UP == keyCode && this.icoMoveUp.visible)
 				{
@@ -446,7 +431,7 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 					return true;
 				}
 			}
-			return super.keyPressed(input);
+			return super.keyPressed(keyCode, scanCode, modifiers);
 		}
 		
 		@Override
@@ -504,9 +489,9 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		}
 		
 		@Override
-		public void onClick(final MouseButtonEvent click, final boolean bl)
+		public void onClick(final double mouseX, final double mouseY)
 		{
-			super.onClick(click, bl);
+			super.onClick(mouseX, mouseY);
 			this.click();
 		}
 		
@@ -519,7 +504,6 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		protected void renderWidget(final GuiGraphics context, final int mouseX, final int mouseY, final float delta)
 		{
 			context.blit(
-				RenderPipelines.GUI_TEXTURED,
 				this.isMouseOver(mouseX, mouseY) ? this.hoverTexture : this.texture,
 				this.getX() + this.drawOffsetX,
 				this.getY() + this.drawOffsetY,
@@ -535,25 +519,6 @@ public class ProviderListWidget extends ObjectSelectionList<ProviderListWidget.P
 		@Override
 		protected void updateWidgetNarration(final NarrationElementOutput builder)
 		{
-		}
-	}
-	
-	
-	static class ClickableTextWidget extends StringWidget
-	{
-		public ClickableTextWidget(final Component message, final Font textRenderer)
-		{
-			super(message, textRenderer);
-		}
-		
-		@Override
-		public void renderWidget(final GuiGraphics context, final int mouseX, final int mouseY, final float deltaTicks)
-		{
-			super.renderWidget(context, mouseX, mouseY, deltaTicks);
-			if(this.isMouseOver(mouseX, mouseY))
-			{
-				context.requestCursor(CursorTypes.POINTING_HAND);
-			}
 		}
 	}
 }

@@ -26,6 +26,9 @@ public interface CapeProvider
 	
 	String name();
 	
+	// null -> will not be resolved for current player
+	// empty -> will not create any client- or request-builder
+	// normal string -> will resolve normally
 	String getBaseUrl(GameProfile profile);
 	
 	default ResolvedTextureInfo resolveTexture(
@@ -86,10 +89,9 @@ public interface CapeProvider
 				return null;
 			}
 			
-			try(final BoundedInputStream cappedIS = BoundedInputStream.builder()
-				.setInputStream(response.body())
-				.setMaxCount(DEFAULT_MAX_DOWNLOAD_BYTES)
-				.get())
+			try(final BoundedInputStream cappedIS = new BoundedInputStream(
+				response.body(),
+				DEFAULT_MAX_DOWNLOAD_BYTES))
 			{
 				final ResolvedTextureInfo.ByteArrayTextureInfo byteArrayTextureInfo =
 					new ResolvedTextureInfo.ByteArrayTextureInfo(

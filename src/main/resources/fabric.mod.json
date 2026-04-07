@@ -55,7 +55,6 @@
   },
   "conflicts": {
     "minecraftcapes": "*",
-    "wynntils": "*",
     "capemod": "*",
     "cicada": "*",
     "voidcapes": "*",
@@ -63,6 +62,7 @@
     "cape-provider": "*"
   },
   "custom": {
+    "cape": "Contributors",
     "modmenu": {
       "links": {
         "modmenu.github_releases": "https://github.com/picapes/cape-provider-x",
