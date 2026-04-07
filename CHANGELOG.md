@@ -1,3 +1,11 @@
+# 4.1.2
+* Migrated to "official" mappings in preparation for the removal of obfuscation
+* Updated dependencies
+
+# 4.1.1
+* Update Cosmetica API #166
+* Improved mod compatibility
+
 # 4.1.0
 * Updated to 1.21.9 (Also supports 1.21.10)
 
