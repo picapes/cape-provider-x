@@ -5,20 +5,20 @@
   "name": "${name}",
   "description": "${desc}",
   "authors": [
-    "litetex"
+    "xsyanic"
   ],
   "contributors": [
     {
-      "name": "Cael & Capes mod contributors",
+      "name": "litetex & cape provider mod contributors",
       "contact": {
-        "homepage": "https://github.com/CaelTheColher/Capes"
+        "homepage": "https://github.com/litetex-oss/mcm-cape-provider"
       }
     }
   ],
   "contact": {
-    "homepage": "https://github.com/litetex-oss/mcm-${id}",
-    "sources": "https://github.com/litetex-oss/mcm-${id}",
-    "issues": "https://github.com/litetex-oss/mcm-${id}/issues"
+    "homepage": "https://github.com/picapes/cape-provider-x",
+    "sources": "https://github.com/picapes/cape-provider-x",
+    "issues": "https://github.com/picapes/cape-provider-x/issues"
   },
   "license": "${license_spdx_id}",
   "icon": "assets/icon.png",
@@ -57,9 +57,8 @@
     "cape": "Contributors",
     "modmenu": {
       "links": {
-        "modmenu.github_releases": "https://github.com/litetex-oss/mcm-${id}/releases",
-        "modmenu.modrinth": "https://modrinth.com/mod/${id}",
-        "modmenu.curseforge": "https://www.curseforge.com/minecraft/mc-mods/${id}"
+        "modmenu.github_releases": "https://github.com/picapes/cape-provider-x/releases",
+        "modmenu.modrinth": "https://modrinth.com/mod/cape-provider-x"
       }
     }
   }

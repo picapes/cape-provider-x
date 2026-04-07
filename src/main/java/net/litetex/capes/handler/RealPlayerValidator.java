@@ -53,21 +53,29 @@ public class RealPlayerValidator
 		{
 			return ValidityState.SELF;
 		}
+
+		// *Hardcodedly commented by @xsyanic to add Offline mode support*
+
 		// Only valid players have version 4 (random generated)
 		// Some servers report players with different versions,
 		// however these are ignored as the cape provider can't match them
-		if(profile.id().version() != 4)
-		{
-			return ValidityState.UUID_INCORRECT_VERSION;
-		}
+
+		// *Hardcodedly commented by @xsyanic to add Offline mode support*
+
+		// if(profile.id().version() != 4)
+		// {
+		// 	return ValidityState.UUID_INCORRECT_VERSION;
+		// }
+
 		if(!StringUtil.isValidPlayerName(profile.name()))
 		{
 			return ValidityState.INVALID_NAME;
 		}
-		if(this.useOnlineValidation && !this.isValidSessionProfile(client, profile.id()))
-		{
-			return ValidityState.ONLINE_VALIDATION_FAIL;
-		}
+		
+		//if(this.useOnlineValidation && !this.isValidSessionProfile(client, profile.id()))
+		//{
+		//	return ValidityState.ONLINE_VALIDATION_FAIL;
+		//}
 		
 		return ValidityState.DEFAULT_OK;
 	}
