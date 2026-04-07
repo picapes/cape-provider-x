@@ -1,20 +1,12 @@
 package net.litetex.capes.provider;
 
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.MinecraftClient;
+
+import net.minecraft.client.Minecraft;
 
 
 public class SkinMCProvider implements CapeProvider
 {
-	private static final Logger LOG = LoggerFactory.getLogger(SkinMCProvider.class);
 	
 	public static final String ID = "skinmc";
 	
@@ -43,7 +35,7 @@ public class SkinMCProvider implements CapeProvider
 	}
 	
 	@Override
-	public String changeCapeUrl(final MinecraftClient client)
+	public String changeCapeUrl(final Minecraft client)
 	{
 		return "https://skinmc.net/account/capes";
 	}

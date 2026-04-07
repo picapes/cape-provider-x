@@ -15,6 +15,7 @@ classes
 
 # Gradle
 .gradle/
+.gradle-user-home/
 build/
 
 # Some files are user/installation independent and are used for configuring the IDE

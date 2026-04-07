@@ -1,3 +1,11 @@
+# 4.1.3
+Fix broken build
+
+## 4.1.0-p4 > 4th Patch of Modifications (@xsyanic's Changes)
+* Removed Rumble Capes (it's deprecated)
+* Fixed issues related to dependencies
+* Updated providers
+
 # 4.1.2
 * Migrated to "official" mappings in preparation for the removal of obfuscation
 * Updated dependencies
