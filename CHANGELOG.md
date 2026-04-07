@@ -2,6 +2,7 @@
 * Fix GSON Map serialization problem
 
 ## 4.3.1-p4 > 4th Patch of Modifications (@xsyanic's Changes)
+> Based on `1.21.10-legacy` branch directly
 * Removed Rumble Capes (it's deprecated)
 * Updated providers & resolved some issues
 
