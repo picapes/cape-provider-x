@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import net.litetex.capes.provider.PiCapesCapeProvider;
-import net.litetex.capes.provider.MinecraftCapesCapeProvider;
 import net.litetex.capes.provider.custom.remote.RemoteCustomProviderConfig;
 
 
@@ -44,7 +43,7 @@ public class Config
 	public void reset()
 	{
 		this.setCurrentPreviewProviderId(null);
-		this.setActiveProviderIds(List.of(MinecraftCapesCapeProvider.ID));
+		this.setActiveProviderIds(List.of(PiCapesCapeProvider.ID));
 		this.setUseDefaultProvider(true);
 		this.setOnlyLoadForSelf(false);
 		this.setEnableElytraTexture(true);

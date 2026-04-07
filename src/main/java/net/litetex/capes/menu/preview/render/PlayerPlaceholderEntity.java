@@ -77,18 +77,25 @@ public class PlayerPlaceholderEntity
 	public ResourceLocation getCapeTexture()
 	{
 		final PlayerCapeHandler handler = this.playerCapeHandlerManager.getProfile(this.gameProfile);
-		return handler != null && handler.hasElytraTexture() ? handler.getCape() : this.skin.capeTexture();
+		if(handler != null)
+		{
+			final ResourceLocation capeTexture = handler.getCape();
+			if(capeTexture != null)
+			{
+				return capeTexture;
+			}
+		}
+		return this.skin.capeTexture();
 	}
 	
 	public ResourceLocation getElytraTexture()
 	{
 		final PlayerCapeHandler handler = this.playerCapeHandlerManager.getProfile(this.gameProfile);
 		final ResourceLocation capeTexture = this.getCapeTexture();
-		return handler == null
-			||
-			handler.hasElytraTexture()
-				&& Capes.instance().config().isEnableElytraTexture()
-				&& capeTexture != null
+		return capeTexture != null
+			&& handler != null
+			&& handler.hasElytraTexture()
+			&& Capes.instance().config().isEnableElytraTexture()
 			? capeTexture
 			: Capes.DEFAULT_ELYTRA_TEXTURE;
 	}

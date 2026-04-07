@@ -49,7 +49,7 @@ public class Capes
 	public static final String MOD_ID = "cape-provider";
 	
 	public static final ResourceLocation DEFAULT_ELYTRA_TEXTURE =
-		ResourceLocation.parse("textures/entity/equipment/wings/elytra.png");
+		ResourceLocation.parse("minecraft:textures/entity/elytra.png");
 	
 	public static final Predicate<CapeProvider> EXCLUDE_DEFAULT_MINECRAFT_CP =
 		cp -> DefaultMinecraftCapeProvider.INSTANCE != cp;

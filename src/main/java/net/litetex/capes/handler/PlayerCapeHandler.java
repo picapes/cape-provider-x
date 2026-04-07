@@ -7,7 +7,6 @@ import java.net.SocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
@@ -81,90 +80,67 @@ public class PlayerCapeHandler
 		{
 			return false;
 		}
-
+		
 		try
 		{
-			final boolean emptyUrl = url.isEmpty();
+			final boolean emptyUrl = profileApiUrl.isEmpty();
 			final HttpClient.Builder clientBuilder = emptyUrl
 				? null
 				: this.createBuilder();
 			
 			final HttpRequest.Builder requestBuilder = emptyUrl
 				? null
-				: HttpRequest.newBuilder(URI.create(url))
+				: HttpRequest.newBuilder(URI.create(profileApiUrl))
 				.timeout(Duration.ofSeconds(10))
 				.header("User-Agent", "CP");
-
+			
 			final ResolvedTextureInfo resolvedTextureInfo =
 				capeProvider.resolveTexture(clientBuilder, requestBuilder, this.profile);
 			if(resolvedTextureInfo == null)
 			{
 				return false;
 			}
-
+			
 			byte[] imageBytes = resolvedTextureInfo.imageBytes();
-			String textureUrlForLog = profileApiUrl;
-
-			// If the resolved texture info is a UrlTextureInfo, fetch the image from the URL
-			if (resolvedTextureInfo instanceof ResolvedTextureInfo.UrlTextureInfo urlInfo && urlInfo.textureURL() != null) {
-				textureUrlForLog = urlInfo.textureURL();
-				try {
-					HttpClient imageClient = clientBuilder.build();
-					HttpRequest imageRequest = HttpRequest.newBuilder(URI.create(urlInfo.textureURL()))
-						.timeout(Duration.ofSeconds(10))
-						.header("User-Agent", "CP")
-						.build();
-					HttpResponse<byte[]> imageResponse = imageClient.send(imageRequest, HttpResponse.BodyHandlers.ofByteArray());
-					if (imageResponse.statusCode() / 100 == 2) {
-						imageBytes = imageResponse.body();
-					} else {
-						LOG.warn("Failed to fetch cape image[url='{}',profileId='{}',statusCode='{}']", urlInfo.textureURL(), this.profile.id(), imageResponse.statusCode());
-						return false;
-					}
-				} catch (Exception e) {
-					LOG.warn("Failed to fetch cape image[url='{}',profileId='{}']", urlInfo.textureURL(), this.profile.id(), e);
-					return false;
-				}
-			}
-
+			
 			if(imageBytes == null)
 			{
 				return false;
 			}
-
+			
 			if(this.isCapeBlocked(capeProvider, imageBytes))
 			{
 				return false;
 			}
-
+			
 			final TextureResolver textureResolver = this.capes.getAllTextureResolvers()
 				.getOrDefault(resolvedTextureInfo.textureResolverId(), DefaultTextureResolver.INSTANCE);
-
+			
 			final AnimatedCapesHandling animatedCapesHandling = this.animatedCapesHandling();
 			if(textureResolver.animated() && animatedCapesHandling == AnimatedCapesHandling.OFF)
 			{
 				return false;
 			}
-
+			
 			this.optTextureProvider = this.registerTexturesAndGetProvider(
 				this.determineTexturesToRegister(
 					textureResolver,
 					imageBytes,
 					animatedCapesHandling == AnimatedCapesHandling.FROZEN,
-					textureUrlForLog));
-
+					profileApiUrl));
+			
 			return this.optTextureProvider.isPresent();
 		}
 		catch(final InterruptedException iex)
 		{
-			LOG.warn("Got interrupted[url='{}',profileId='{}']", url, this.profile.getId(), iex);
+			LOG.warn("Got interrupted[url='{}',profileId='{}']", profileApiUrl, this.profile.getId(), iex);
 			Thread.currentThread().interrupt();
 		}
 		catch(final Exception ex)
 		{
-			LOG.warn("Failed to process texture[url='{}',profileId='{}']", url, this.profile.getId(), ex);
+			LOG.warn("Failed to process texture[url='{}',profileId='{}']", profileApiUrl, this.profile.getId(), ex);
 		}
-
+		
 		this.resetCape();
 		return false;
 	}

@@ -29,7 +29,7 @@ public class SkinMCProvider extends CacheableCapeProvider
 	@Override
 	public String getBaseUrl(final GameProfile profile)
 	{
-		return "https://skinmc.net/api/v1/skinmcCape/" + profile.id().toString(); // https://skinmc.net/api/v1/skinmcCape/<uuid>
+		return this.getBaseUrl(profile, false);
 	}
 	
 	@Override
@@ -38,8 +38,27 @@ public class SkinMCProvider extends CacheableCapeProvider
 		final HttpRequest.Builder requestBuilder,
 		final GameProfile profile) throws IOException, InterruptedException
 	{
+		ResolvedTextureInfo resolvedTextureInfo = null;
+		try
+		{
+			resolvedTextureInfo = this.resolveCacheableTexture(
+				this.getBaseUrl(profile, false),
+				clientBuilder,
+				requestBuilder,
+				this.textureResolverId());
+		}
+		catch(final RuntimeException ex)
+		{
+			// ignore and fallback to no-hyphen UUID
+		}
+		
+		if(resolvedTextureInfo != null)
+		{
+			return resolvedTextureInfo;
+		}
+		
 		return this.resolveCacheableTexture(
-			this.getBaseUrl(profile),
+			this.getBaseUrl(profile, true),
 			clientBuilder,
 			requestBuilder,
 			this.textureResolverId());
@@ -70,5 +89,13 @@ public class SkinMCProvider extends CacheableCapeProvider
 	public String homepageUrl()
 	{
 		return "https://skinmc.net/capes";
+	}
+
+	private String getBaseUrl(final GameProfile profile, final boolean withoutHyphens)
+	{
+		final String uuid = withoutHyphens
+			? profile.getId().toString().replace("-", "")
+			: profile.getId().toString();
+		return "https://skinmc.net/api/v1/skinmcCape/" + uuid;
 	}
 }

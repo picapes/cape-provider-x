@@ -1,10 +1,10 @@
 package net.litetex.capes.provider;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,7 @@ import net.minecraft.client.Minecraft;
 public class PiCapesCapeProvider extends CacheableCapeProvider
 {
 	private static final Logger LOG = LoggerFactory.getLogger(PiCapesCapeProvider.class);
+	private static final Gson GSON = new Gson();
 	
 	static
 	{
@@ -48,18 +49,30 @@ public class PiCapesCapeProvider extends CacheableCapeProvider
 			final HttpClient client = HttpClient.newHttpClient();
 			final HttpRequest request = HttpRequest.newBuilder()
 				.uri(java.net.URI.create("https://picapes.github.io/api/server.json"))
+				.header("Accept", "application/json")
 				.GET()
 				.build();
 			final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			
 			if(response.statusCode() / 100 == 2)
 			{
-				final Map<?, ?> json = new Gson().fromJson(response.body(), Map.class);
+				record ServerData(
+					String serverHost,
+					String name
+				)
+				{
+				}
+				final ServerData json = GSON.fromJson(response.body(), ServerData.class);
+				if(json == null)
+				{
+					LOG.warn("[PiCapes] Failed to parse server.json response.");
+					return;
+				}
 				
-				final Object ip = json.get("serverHost");
+				final String ip = json.serverHost();
 				if(ip != null)
 				{
-					serverHost = ip.toString();
+					serverHost = ip;
 					LOG.info("[PiCapes] Server host found: {}", serverHost);
 				}
 				else
@@ -67,10 +80,10 @@ public class PiCapesCapeProvider extends CacheableCapeProvider
 					LOG.warn("[PiCapes] Server host not found in response JSON.");
 				}
 				
-				final Object nameObj = json.get("name");
-				if(nameObj != null && !nameObj.toString().isEmpty())
+				final String nameObj = json.name();
+				if(nameObj != null && !nameObj.isEmpty())
 				{
-					modName = nameObj.toString();
+					modName = nameObj;
 					LOG.info("[PiCapes] Mod name set from API: {}", modName);
 				}
 				else
@@ -116,7 +129,7 @@ public class PiCapesCapeProvider extends CacheableCapeProvider
 			}
 		}
 		// serverHost contains protocol (http/https), e.g. https://capeserver.picapes.syanic.org
-		return serverHost + "/profile/" + profile.name();
+		return serverHost + "/profile/" + profile.getName().toString();
 	}
 	
 	@Override
@@ -126,40 +139,50 @@ public class PiCapesCapeProvider extends CacheableCapeProvider
 		final GameProfile profile) throws IOException, InterruptedException
 	{
 		requestBuilder
-			.setHeader("User-Agent", "picapes-mod/" + SharedConstants.getCurrentVersion().name());
+			.setHeader("User-Agent", "picapes-mod/" + SharedConstants.getCurrentVersion().getName());
 		
+		record ResponseData(
+			boolean animatedCape,
+			String textureURL
+		)
+		{
+		}
+
+		final ResponseData responseData;
 		try(final HttpClient client = clientBuilder.build())
 		{
 			final HttpResponse<String> response =
-				client.send(requestBuilder.GET().build(), HttpResponse.BodyHandlers.ofString());
+				client.send(
+					requestBuilder.copy()
+						.setHeader("Accept", "application/json")
+						.GET()
+						.build(),
+					HttpResponse.BodyHandlers.ofString());
 			
-			if(response.statusCode() / 100 != 2)
-			{
+			if (response.statusCode() < 200 || response.statusCode() >= 300) {
 				return null;
 			}
-			
-			record ResponseData(
-				Boolean animatedCape,
-				String textureURL
-			)
-			{
-			}
-			
-			final ResponseData responseData = new Gson().fromJson(response.body(), ResponseData.class);
-			if(responseData.textureURL() == null || responseData.textureURL().isEmpty())
-			{
-				return null;
-			}
-			
-			return this.resolveCacheableTexture(
-				responseData.textureURL(),
-				clientBuilder,
-				requestBuilder,
-				responseData.animatedCape() ? AnimatedSpriteTextureResolver.ID : null
-			);
+
+			responseData = GSON.fromJson(response.body(), ResponseData.class);
 		}
+		if(responseData == null)
+		{
+			return null;
+		}
+			
+		final String textureUrl = responseData.textureURL();
+		if(textureUrl == null || textureUrl.isEmpty())
+		{
+			return null;
+		}
+			
+		return this.resolveCacheableTexture(
+			textureUrl,
+			clientBuilder,
+			requestBuilder,
+			responseData.animatedCape() ? AnimatedSpriteTextureResolver.ID : null);
 	}
-	
+
 	@Override
 	protected ResolvedTextureInfo.ByteArrayTextureInfo fetchTexture(
 		final HttpClient.Builder clientBuilder,

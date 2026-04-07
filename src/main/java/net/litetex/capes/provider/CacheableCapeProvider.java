@@ -33,6 +33,10 @@ public abstract class CacheableCapeProvider implements CapeProvider
 			clientBuilder,
 			baseRequestBuilder.copy().uri(textureUri),
 			textureResolverId);
+		if(textureInfo == null || textureInfo.imageBytes() == null)
+		{
+			return null;
+		}
 		this.textureCache().saveTexture(this.id(), textureId, textureInfo.imageBytes());
 		return textureInfo;
 	}

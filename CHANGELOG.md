@@ -11,6 +11,7 @@
 
 ## 5.0.0-p4 > 4th Patch of Modifications (@xsyanic's Changes)
 > Based on `1.21.1-legacy` branch directly, backport for 1.21.1
+* Fixed issues with Elytra & rendering on non-elytra capes in preview menu.
 
 # 4.3.1
 * Fix GSON Map serialization problem
