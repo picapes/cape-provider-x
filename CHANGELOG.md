@@ -1,10 +1,25 @@
-# 4.1.3
-Fix broken build
+# 4.3.1
+* Fix GSON Map serialization problem
 
-## 4.1.0-p4 > 4th Patch of Modifications (@xsyanic's Changes)
+## 4.3.1-p4 > 4th Patch of Modifications (@xsyanic's Changes)
 * Removed Rumble Capes (it's deprecated)
-* Fixed issues related to dependencies
-* Updated providers
+* Updated providers & resolved some issues
+
+# 4.3.0
+* Implement local caching of cape textures - if the provider supports it #
+  * Currently only supported by MinecraftCapes
+  * Textures are saved inside `.mods/cape-provider/texture-cache` in the game directory
+  * Unused textures are cleaned up automatically
+
+# 4.2.1
+* Fix MinecraftCapes Provider no longer working due to breaking API changes #206
+* Removed Wynntils #204
+
+# 4.2.0
+* Updated to 1.21.11
+
+# 4.1.3
+* Fix broken build
 
 # 4.1.2
 * Migrated to "official" mappings in preparation for the removal of obfuscation

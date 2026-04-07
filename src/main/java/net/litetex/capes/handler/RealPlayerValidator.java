@@ -11,6 +11,7 @@ import com.mojang.authlib.GameProfile;
 
 import net.litetex.capes.util.collections.MaxSizedHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.StringUtil;
 
 
 public class RealPlayerValidator
@@ -58,7 +59,6 @@ public class RealPlayerValidator
 		// Only valid players have version 4 (random generated)
 		// Some servers report players with different versions,
 		// however these are ignored as the cape provider can't match them
-
 		//if(profile.id().version() != 4)
 		//{
 		//	return ValidityState.UUID_INCORRECT_VERSION;
@@ -94,29 +94,6 @@ public class RealPlayerValidator
 		{
 			return this.valid;
 		}
-	}
-	
-	@SuppressWarnings("checkstyle:MagicNumber")
-	private boolean isValidName(final String playerName)
-	{
-		final int length = playerName.length();
-		if(length < 3 || length > 16)
-		{
-			return false;
-		}
-		
-		for(int i = 0; i < length; i++)
-		{
-			final char c = playerName.charAt(i);
-			if(!(c >= 'a' && c <= 'z'
-				|| c >= 'A' && c <= 'Z'
-				|| c >= '0' && c <= '9'
-				|| c == '_'))
-			{
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	private boolean isValidSessionProfile(final Minecraft client, final UUID id)
