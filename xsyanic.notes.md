@@ -1,7 +1,7 @@
 ### List of changes made by @xsyanic to this new branch forked from mcm-cape-provider for fresh start
 > fp = Fresh Patches
 
-## 07-04-2026 (on 5.1.0-fp1)
+## 07-04-2026 (5.1.0-fp1)
 
 1. `\src\main\java\net\litetex\capes\handler\RealPlayerValidator.java`
 - Hardcodedly commented parts of code to allow Offline mode support
@@ -20,5 +20,11 @@
 
 6. `src\main\resources\fabric.mod.json`, `src\main\resources\assets\icon.png`, `gradle.properties` & `README.md`
 - Changed branding to fit to **Cape Provider X** again.
+
+---
+
+## 08-04-2026 (v5.2.0-fp1)
+1. Fetched changes from github.com/litetex-oss/mcm-cape-provider/tree/v5.2.0
+- Therefore updated the mod to `Minecraft Fabric 26.1` version
 
 ---
