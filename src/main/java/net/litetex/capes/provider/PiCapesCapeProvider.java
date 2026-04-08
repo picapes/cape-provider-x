@@ -52,6 +52,12 @@ public class PiCapesCapeProvider extends CacheableCapeProvider
 		
 		return this.joinPath(serverInfo.serverHost(), "/profile/" + profile.name());
 	}
+
+	@Override
+	public double rateLimitedReqPerSec()
+	{
+		return 20;
+	}
 	
 	@Override
 	public ResolvedTextureInfo resolveTexture(
