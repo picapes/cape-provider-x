@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +69,7 @@ public class PlayerCapeHandlerManager
 					private static final AtomicInteger COUNTER = new AtomicInteger(0);
 					
 					@Override
-					public Thread newThread(@NotNull final Runnable r)
+					public Thread newThread(@NonNull final Runnable r)
 					{
 						final Thread thread = new Thread(r);
 						thread.setName("Cape-" + COUNTER.getAndIncrement());
@@ -146,23 +146,40 @@ public class PlayerCapeHandlerManager
 			return;
 		}
 		
+		final long startMs = this.debugEnabled ? System.currentTimeMillis() : 0;
+		
 		final PlayerCapeHandler handler = this.getOrCreateProfile(profile);
-		handler.resetCape();
-		
-		final Optional<CapeProvider> optFoundCapeProvider = capeProviders.stream()
-			.filter(cp -> {
-				this.capeProviderRateLimits.waitForRateLimit(cp);
-				return handler.trySetCape(cp);
-			})
-			.findFirst();
-		
-		if(LOG.isDebugEnabled())
+		// Synchronize here to ensure that when the same handler is interacted with multiple times
+		// (e.g. in the preview screen) nothing gets mixed up
+		synchronized(handler)
 		{
-			optFoundCapeProvider.ifPresentOrElse(
-				cp ->
-					LOG.debug("Loaded cape from {} for {}/{}", cp.id(), profile.name(), profile.id()),
-				() -> LOG.debug("Found no cape for {}/{}", profile.name(), profile.id())
-			);
+			handler.resetCape();
+			
+			final Optional<CapeProvider> optFoundCapeProvider = capeProviders.stream()
+				.filter(cp -> {
+					this.capeProviderRateLimits.waitForRateLimit(cp);
+					return handler.trySetCape(cp);
+				})
+				.findFirst();
+			
+			if(this.debugEnabled)
+			{
+				final long tookMs = System.currentTimeMillis() - startMs;
+				optFoundCapeProvider.ifPresentOrElse(
+					cp ->
+						LOG.debug(
+							"Loaded cape from {} for {}/{}, took {}ms",
+							cp.id(),
+							profile.name(),
+							profile.id(),
+							tookMs),
+					() -> LOG.debug(
+						"Found no cape for {}/{}, took {}ms",
+						profile.name(),
+						profile.id(),
+						tookMs)
+				);
+			}
 		}
 		
 		if(onAfterLoaded != null)

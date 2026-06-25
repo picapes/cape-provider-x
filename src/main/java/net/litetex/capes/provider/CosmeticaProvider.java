@@ -3,21 +3,20 @@ package net.litetex.capes.provider;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Optional;
 
-import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.mojang.authlib.GameProfile;
 
+import net.litetex.capes.handler.textures.AnimatedSpriteTextureResolver;
 import net.litetex.capes.provider.antifeature.AntiFeature;
 import net.litetex.capes.provider.antifeature.AntiFeatures;
 import net.minecraft.client.Minecraft;
 
 
-public class CosmeticaProvider implements CapeProvider
+public class CosmeticaProvider extends CacheableCapeProvider
 {
-	private static final String BASE64_PREFIX = "data:image/png;base64,";
-	
 	@Override
 	public String id()
 	{
@@ -33,10 +32,7 @@ public class CosmeticaProvider implements CapeProvider
 	@Override
 	public String getBaseUrl(final GameProfile profile)
 	{
-		return "https://api.cosmetica.cc/v2/get/info"
-			+ "?uuid=" + profile.id().toString()
-			+ "&nothirdparty"
-			+ "&excludemodels";
+		return "https://api.cloaks.gg/users/" + profile.id().toString() + "/cape";
 	}
 	
 	@Override
@@ -45,38 +41,40 @@ public class CosmeticaProvider implements CapeProvider
 		final HttpRequest.Builder requestBuilder,
 		final GameProfile profile) throws IOException, InterruptedException
 	{
-		requestBuilder.setHeader("Accept", "application/json");
-		
-		try(final HttpClient client = clientBuilder.build())
+		record CloakResponseData(
+			int frames,
+			@SerializedName("texture")
+			String textureUrl
+		)
 		{
-			final HttpResponse<String> response =
-				client.send(requestBuilder.GET().build(), HttpResponse.BodyHandlers.ofString());
-			
-			if(response.statusCode() / 100 != 2)
-			{
-				return null;
-			}
-			
-			record CapeData(String image)
-			{
-			}
-			record ResponseData(CapeData cape)
-			{
-			}
-			
-			final ResponseData responseData = new Gson().fromJson(response.body(), ResponseData.class);
-			if(responseData == null
-				|| responseData.cape() == null
-				|| responseData.cape().image() == null
-				|| !responseData.cape().image().startsWith(BASE64_PREFIX))
-			{
-				return null;
-			}
-			
-			return new ResolvedTextureInfo.Base64TextureInfo(
-				responseData.cape().image().substring(BASE64_PREFIX.length())
-			);
 		}
+		
+		record ResponseData(
+			CloakResponseData cloak
+		)
+		{
+		}
+		
+		final Optional<CloakResponseData> optCloakResponseData = Optional.ofNullable(
+				this.downloadJSON(clientBuilder, requestBuilder, ResponseData.class))
+			.map(ResponseData::cloak);
+		
+		if(optCloakResponseData.isEmpty())
+		{
+			return null;
+		}
+		
+		final CloakResponseData cloakResponseData = optCloakResponseData.orElseThrow();
+		if(cloakResponseData.textureUrl() == null)
+		{
+			return null;
+		}
+		
+		return this.resolveCacheableTexture(
+			cloakResponseData.textureUrl(),
+			clientBuilder,
+			requestBuilder,
+			cloakResponseData.frames() > 1 ? AnimatedSpriteTextureResolver.ID : null);
 	}
 	
 	@Override
@@ -88,7 +86,7 @@ public class CosmeticaProvider implements CapeProvider
 	@Override
 	public String changeCapeUrl(final Minecraft client)
 	{
-		return "https://login.cosmetica.cc";
+		return "https://cosmetica.cc/login";
 	}
 	
 	@Override
@@ -101,7 +99,6 @@ public class CosmeticaProvider implements CapeProvider
 	public List<AntiFeature> antiFeatures()
 	{
 		return List.of(
-			AntiFeatures.ABANDONED, // Last updated 2024-05
 			AntiFeatures.BAD_CONNECTION // Response can take up to 3s
 		);
 	}

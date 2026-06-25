@@ -1,3 +1,30 @@
+# 5.4.3
+* Improved compatibility with other mods #332
+
+# 5.4.2
+* Cosmetica
+  * Use optimized cape endpoint
+  * Correct "Edit Cape" link
+* Minor optimizations
+
+# 5.4.1
+* Fixed / Updated Cosmetica provider to v2 #324
+
+# 5.4.0
+* Cape Providers supplied by mods now display a link to the mods website
+
+# 5.3.2
+* Animated capes from "minecraftcapes" are now displayed correctly
+
+# 5.3.1
+* Improve compatibility with other mods
+
+# 5.3.0
+* Reworked configuration UI
+  * Combined "Providers" and "Preview" into one UI
+  * You can now preview the provider by clicking it and get the preview displayed on the left
+  * Renamed "Others" configuration tab to "Advanced"
+
 # 5.2.0
 * Updated to 26.1
 
@@ -108,10 +135,10 @@
 * Improved load balancing with cape providers
   * Providers are now rate limited
     * the default is 20 req/s
-    * can be overwriten per provider using ``rateLimitedReqPerSec``
+    * can be overwritten per provider using ``rateLimitedReqPerSec``
   * If there are too many pending cape load tasks the oldest ones will now be automatically discarded
 * Limited amount of tracked players to prevent running out of memory
-* Now compatibile with ``SkinShuffle``
+* Now compatible with ``SkinShuffle``
 * Now targeting 1.21.8
 
 # 2.1.0
