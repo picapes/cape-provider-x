@@ -32,3 +32,7 @@
 ## 25-06-2026 (v5.4.3-fp1)
 1. Fetched changes from github.com/litetex-oss/mcm-cape-provider/tree/v5.4.3
 - Therefore updated the mod to `Minecraft Fabric 26.1.2` version
+
+## 25-06-2026 (v5.5.0-fp1)
+1. Fetched changes from github.com/litetex-oss/mcm-cape-provider/tree/v5.5.0
+- Therefore updated the mod to `Minecraft Fabric 26.2` version
