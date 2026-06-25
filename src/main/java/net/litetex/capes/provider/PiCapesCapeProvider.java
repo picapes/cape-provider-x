@@ -113,15 +113,6 @@ public class PiCapesCapeProvider extends CacheableCapeProvider
 	}
 	
 	@Override
-	protected ResolvedTextureInfo.ByteArrayTextureInfo fetchTexture(
-		final HttpClient.Builder clientBuilder,
-		final HttpRequest.Builder requestBuilder,
-		final String textureResolverId) throws IOException, InterruptedException
-	{
-		return CapeProvider.resolveTextureDefault(clientBuilder, requestBuilder, textureResolverId);
-	}
-	
-	@Override
 	public boolean hasChangeCapeUrl()
 	{
 		return true;
