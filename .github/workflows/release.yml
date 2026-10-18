@@ -24,16 +24,32 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Read mod version
-        id: version
+      - name: Read release metadata
+        id: metadata
         shell: bash
         run: |
           version="$(sed -n 's/^mod_version=//p' gradle.properties | head -n 1)"
-          if [ -z "$version" ]; then
-            echo "mod_version was not found in gradle.properties" >&2
+          minecraft_version="$(sed -n 's/^minecraft_version=//p' gradle.properties | head -n 1)"
+          if [ -z "$version" ] || [ -z "$minecraft_version" ]; then
+            echo "mod_version or minecraft_version was not found in gradle.properties" >&2
             exit 1
           fi
+
+          cape_provider_version="${version%-*}"
+          patch="${version##*-}"
+          description="$(printf '%s\n' \
+            "- Based on Cape Provider Mod \`$cape_provider_version\`" \
+            "- Patch: \`$patch\`" \
+            "For **Minecraft Fabric $minecraft_version**" \
+            "> changelogs: https://github.com/picapes/cape-provider-x/blob/dev/xsyanic.notes.md")"
+
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "minecraft_version=$minecraft_version" >> "$GITHUB_OUTPUT"
+          {
+            echo "description<<EOF"
+            echo "$description"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build
         run: ./gradlew build
@@ -41,6 +57,7 @@ jobs:
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.release.tag_name || steps.version.outputs.version }}
-          name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.event.release.tag_name || steps.metadata.outputs.version }}
+          name: ${{ steps.metadata.outputs.version }} (for ${{ steps.metadata.outputs.minecraft_version }})
+          body: ${{ steps.metadata.outputs.description }}
           files: build/libs/*.jar
