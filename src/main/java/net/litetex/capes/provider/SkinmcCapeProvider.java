@@ -1,5 +1,7 @@
 package net.litetex.capes.provider;
 
+import java.net.URI;
+
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.Minecraft;
@@ -34,14 +36,14 @@ public class SkinmcCapeProvider implements CapeProvider
 	}
 	
 	@Override
-	public String changeCapeUrl(final Minecraft client)
+	public URI changeCapeUri(final Minecraft client)
 	{
-		return "https://skinmc.net/capes/";
+		return URI.create("https://skinmc.net/capes/");
 	}
 	
 	@Override
-	public String homepageUrl()
+	public URI homepageUri()
 	{
-		return "https://skinmc.net/";
+		return URI.create("https://skinmc.net/");
 	}
 }

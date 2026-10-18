@@ -1,3 +1,19 @@
+# 5.6.3
+* Fix built-in Laby Mod provider by changing it's download url
+
+# 5.6.2
+* Removed legacy config file migration
+
+# 5.6.1
+* Fix releases to CurseForge
+* Improve how proxy is applied
+
+# 5.6.0
+* Updated to 26.3
+
+# 5.5.1
+* Improved compatibility with `minecraftcapes` #367
+
 # 5.5.0
 * Updated to 26.2
 

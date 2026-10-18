@@ -119,15 +119,15 @@ public class PiCapesCapeProvider extends CacheableCapeProvider
 	}
 	
 	@Override
-	public String changeCapeUrl(final Minecraft client)
+	public URI changeCapeUri(final Minecraft client)
 	{
-		return "https://catalog.picapes.syanic.org/";
+		return URI.create("https://catalog.picapes.syanic.org/");
 	}
 	
 	@Override
-	public String homepageUrl()
+	public URI homepageUri()
 	{
-		return "https://picapes.syanic.org/";
+		return URI.create("https://picapes.syanic.org/");
 	}
 	
 	private ServerInfo getServerInfo()

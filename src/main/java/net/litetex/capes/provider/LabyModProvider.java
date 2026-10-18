@@ -1,6 +1,7 @@
 package net.litetex.capes.provider;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.util.Arrays;
@@ -32,7 +33,9 @@ public class LabyModProvider implements CapeProvider
 	@Override
 	public String getBaseUrl(final GameProfile profile)
 	{
-		return "https://dl.labymod.net/capes/" + profile.id().toString();
+		return "https://items.laby.net/00e8db8c-79b2-4158-88a7-7c2aa17121b3/textures/"
+			+ profile.id().toString()
+			+ ".png";
 	}
 	
 	@Override
@@ -63,15 +66,15 @@ public class LabyModProvider implements CapeProvider
 	}
 	
 	@Override
-	public String changeCapeUrl(final Minecraft client)
+	public URI changeCapeUri(final Minecraft client)
 	{
-		return "https://labymod.net/login";
+		return URI.create("https://labymod.net/login");
 	}
 	
 	@Override
-	public String homepageUrl()
+	public URI homepageUri()
 	{
-		return "https://labymod.net";
+		return URI.create("https://labymod.net");
 	}
 	
 	@Override
