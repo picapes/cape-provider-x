@@ -40,6 +40,7 @@ jobs:
           description="$(printf '%s\n' \
             "- Based on Cape Provider Mod \`$cape_provider_version\`" \
             "- Patch: \`$patch\`" \
+            "" \
             "For **Minecraft Fabric $minecraft_version**" \
             "> changelogs: https://github.com/picapes/cape-provider-x/blob/dev/xsyanic.notes.md")"
 
@@ -58,6 +59,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.release.tag_name || steps.metadata.outputs.version }}
-          name: ${{ steps.metadata.outputs.version }} (for ${{ steps.metadata.outputs.minecraft_version }})
+          name: ${{ steps.metadata.outputs.version }} (for MC Fabric ${{ steps.metadata.outputs.minecraft_version }})
           body: ${{ steps.metadata.outputs.description }}
           files: build/libs/*.jar
